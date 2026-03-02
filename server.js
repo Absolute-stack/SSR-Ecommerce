@@ -36,8 +36,8 @@ app.get("*", (req, res) => {
           callback();
         },
       });
+      pipe(appendtail);
       appendtail.pipe(res);
-      pipe(res);
     },
     onError(err) {
       console.error(err);
