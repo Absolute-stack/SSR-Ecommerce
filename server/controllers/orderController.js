@@ -83,15 +83,17 @@ export async function getMyOrders(req, res) {
 
 export async function getOrderById(req, res) {
   try {
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findById(req.params.id)
+      .populate("customer.userId", "name email")
+      .populate("items.product", "name images");
     if (!order)
       return res.status(400).json({
         success: false,
         message: "Order not found",
       });
     return res.status(200).json({
-      success: true,
       order,
+      success: true,
     });
   } catch (error) {
     console.error(error);
@@ -113,7 +115,7 @@ export async function guestLookupOrder(req, res) {
       "customer.email": email,
       "customer.userId": null,
       paystackReference: reference,
-    });
+    }).populate("items.product", "name images");
 
     if (!order)
       return res.status(400).json({
